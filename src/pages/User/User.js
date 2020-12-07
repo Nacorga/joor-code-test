@@ -1,14 +1,19 @@
 import './User.scss';
-import React from 'react';
+import React, { useState } from 'react';
 import { useHistory } from "react-router-dom";
 import PageLayoutComponent from '../../components/PageLayout/PageLayout';
 import Avatar from '@material-ui/core/Avatar';
 import { makeStyles } from '@material-ui/core/styles';
+import Button from '@material-ui/core/Button';
+import StarIcon from '@material-ui/icons/Star';
 
 const UserPage = () => {
 
     const history = useHistory();
     const user = history.location.state.user;
+    const currentFavUsers = localStorage.getItem('favorites') ? [...JSON.parse(localStorage.getItem('favorites'))] : []
+
+    const [fav, setFav] = useState(currentFavUsers.find((elem) => elem === user.id) ? true : false);
 
     const useStyles = makeStyles({
         largeAvatar: {
@@ -18,6 +23,16 @@ const UserPage = () => {
     });
 
     const classes = useStyles();
+
+    const toggleFavorite = () => {
+        if (fav) {
+            localStorage.setItem('favorites', JSON.stringify(currentFavUsers.filter((elem) => elem !== user.id)));
+            setFav(false);
+        } else {
+            localStorage.setItem('favorites', JSON.stringify([...currentFavUsers, user.id]));
+            setFav(true);
+        }
+    }
 
     return (
         <>
@@ -44,6 +59,18 @@ const UserPage = () => {
                                     <h4 className="">Email: <span>{user.email}</span></h4>
                                 </li>
                             </ul>
+                            <div className="user-actions">
+                                <Button
+                                    variant="contained"
+                                    color="primary"
+                                    size="large"
+                                    startIcon={<StarIcon />}
+                                    onClick={() => toggleFavorite()}>
+                                        {
+                                            fav ? 'Remove from favorites' : 'Save as favorite'
+                                        }
+                                </Button>
+                            </div>
                         </div>
                     </div>
                 </div>
