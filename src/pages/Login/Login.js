@@ -11,11 +11,11 @@ const LoginPage = () => {
   const [user, setUser] = useState("mock_user");
   const [password, setPassword] = useState("mock_password");
 
+  const history = useHistory();
+
   const validateForm = () => {
     return user.length > 0 && password.length > 0;
   }
-
-  const history = useHistory();
 
   const handleSubmit = async (event) => {
 

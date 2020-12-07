@@ -14,6 +14,7 @@ const Routes = (props) => (
         <LoginPage />
       </Route>
       <Route path="/users" render={authGuard(UsersPage)}></Route>
+      <Route path="/users/:id" render={authGuard(UsersPage)}></Route>
       <Route exact path="/">
         <Redirect to="/login" />
       </Route>
