@@ -11,7 +11,7 @@ const UserPage = () => {
 
     const history = useHistory();
     const user = history.location.state.user;
-    const currentFavUsers = localStorage.getItem('favorites') ? [...JSON.parse(localStorage.getItem('favorites'))] : []
+    const currentFavUsers = localStorage.getItem('favorites') ? [...JSON.parse(localStorage.getItem('favorites'))] : [];
 
     const [fav, setFav] = useState(currentFavUsers.find((elem) => elem === user.id) ? true : false);
 

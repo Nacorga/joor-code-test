@@ -7,7 +7,6 @@ const HeaderComponent = () => {
     const history = useHistory();
 
     const logOut = () => {
-        localStorage.removeItem('favorites');
         localStorage.removeItem('token');
         history.push("/");
     }
