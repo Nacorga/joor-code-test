@@ -42,7 +42,7 @@ const LoginPage = () => {
       history.push("/users");
 
     } catch(err) {
-      console.log(err.message);
+      alert(err.message);
     }
 
   }

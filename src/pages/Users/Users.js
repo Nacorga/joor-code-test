@@ -55,7 +55,7 @@ const UsersPage = () => {
       setMemoUsers(data);
 
     } catch(err) {
-      console.log(err.message);
+      alert(err.message);
     }
 
   }
