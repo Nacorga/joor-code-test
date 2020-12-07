@@ -2,7 +2,6 @@ import './Users.scss';
 import React, { useState, useEffect } from 'react';
 import { GLOBALS } from '../../globals';
 import PageLayoutComponent from '../../components/PageLayout/PageLayout';
-import { Container } from 'react-bootstrap';
 import Avatar from '@material-ui/core/Avatar';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -12,14 +11,17 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import { makeStyles } from '@material-ui/core/styles';
+import { useHistory } from "react-router-dom";
 
 const UsersPage = () => {
 
   const [users, setUsers] = useState([]);
 
+  const history = useHistory();
+
   useEffect(() => {
     loadUsers();
-  });
+  }, []);
 
   const loadUsers = async () => {
 
@@ -40,7 +42,7 @@ const UsersPage = () => {
         throw new Error(data.error);
       }
 
-      setUsers(usersMapTo(data));
+      setUsers(data);
 
     } catch(err) {
       console.log(err.message);
@@ -48,53 +50,49 @@ const UsersPage = () => {
 
   }
 
-  const usersMapTo = (data) => {
-    return data.map((elem) => ({
-      id: elem.id,
-      avatar: elem.smallAvatar,
-      fullName: `${elem.firstName} ${elem.lastName}`,
-      gender: elem.gender
-    }));
+  const navToUser = (user) => {
+    history.push({
+      pathname: `/user/${user.id}`,
+      state: { user }
+    })
   }
 
   const useStyles = makeStyles({
     tableRow: {
       cursor: 'pointer'
-    } 
+    }
   });  
 
   const classes = useStyles();
 
   return (
     <>
-      <Container>
-        <PageLayoutComponent title={`Users list (${users.length})`}>
-          <TableContainer component={Paper}>
-            <Table className={classes.table} size="small" aria-label="a dense table">
-              <TableHead>
-                <TableRow>
-                  <TableCell>Name</TableCell>
-                  <TableCell align="center">Avatar</TableCell>
-                  <TableCell align="center">Gender</TableCell>
+      <PageLayoutComponent title={`Users list (${users.length})`}>
+        <TableContainer component={Paper}>
+          <Table className={classes.table} size="small" aria-label="a dense table">
+            <TableHead>
+              <TableRow>
+                <TableCell>Name</TableCell>
+                <TableCell align="center">Avatar</TableCell>
+                <TableCell align="center">Gender</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {users.map((user, i) => (
+                <TableRow hover className={classes.tableRow} key={i} onClick={() => navToUser(user)}>
+                  <TableCell component="th" scope="row">{user.firstName} {user.lastName}</TableCell>
+                  <TableCell>
+                    <div className="avatar-container">
+                      <Avatar src={user.smallAvatar} />
+                    </div>
+                  </TableCell>
+                  <TableCell align="center">{user.gender}</TableCell>
                 </TableRow>
-              </TableHead>
-              <TableBody>
-                {users.map((user, i) => (
-                  <TableRow hover className={classes.tableRow} key={i}>
-                    <TableCell component="th" scope="row">{user.fullName}</TableCell>
-                    <TableCell>
-                      <div className="avatar-container">
-                        <Avatar src={user.avatar} />
-                      </div>
-                    </TableCell>
-                    <TableCell align="center">{user.gender}</TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        </PageLayoutComponent>
-      </Container>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </PageLayoutComponent>
     </>
   )
 
